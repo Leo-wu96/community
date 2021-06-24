@@ -17,6 +17,11 @@ public class TransactionTests {
 
     @Test
     public void testSave1(){
+        alphaService.save1();
+    }
 
+    @Test
+    public void testSave2(){
+        alphaService.save2();
     }
 }

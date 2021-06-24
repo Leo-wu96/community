@@ -8,9 +8,13 @@ import com.nowcoder.community.entity.User;
 import com.nowcoder.community.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -29,6 +33,9 @@ public class AlphaService {
 
     @Autowired
     private DiscussPostMapper discussPostMapper;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     public AlphaService(){
         System.out.println("construct AlphaService");
@@ -72,10 +79,43 @@ public class AlphaService {
         post.setUserId(user.getId());
         post.setTitle("hello");
         post.setContent("welcome join in nowcoder");
-        discussPostMapper.insertDiscussPost(post);
+//        discussPostMapper.insertDiscussPost(post);
 
         Integer.valueOf("abc");
 
         return "ok";
     }
+
+    public Object save2(){
+        transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+        return transactionTemplate.execute(new TransactionCallback<Object>() {
+            @Override
+            public Object doInTransaction(TransactionStatus transactionStatus) {
+                // add user
+                User user = new User();
+                user.setUsername("beta");
+                user.setSalt(CommunityUtil.generateUUID().substring(0,5));
+                user.setPassword(CommunityUtil.md5("123"+user.getSalt()));
+                user.setHeaderUrl("http://image.nowcoder.com/head/11t.png");
+                user.setCreateTime(new Date());
+                user.setEmail("beta@qq.com");
+                userMapper.insertUser(user);
+
+                // add post
+                DiscussPost post = new DiscussPost();
+                post.setCreateTime(new Date());
+                post.setUserId(user.getId());
+                post.setTitle("hello");
+                post.setContent("welcome join in nowcoder");
+        //        discussPostMapper.insertDiscussPost(post);
+
+                Integer.valueOf("abc");
+                return "ok";
+            }
+        });
+    }
+
+
 }
