@@ -2,7 +2,6 @@ package com.nowcoder.community.controller;
 
 
 import com.google.code.kaptcha.Producer;
-import com.nowcoder.community.dao.LoginTicketMapper;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
@@ -50,6 +49,8 @@ public class LoginController implements CommunityConstant {
     public String getLoginPage(){
         return "/site/login";
     }
+
+
 
     @RequestMapping(path="/register",method = RequestMethod.POST)
     public String register(Model model, User user){
@@ -126,6 +127,7 @@ public class LoginController implements CommunityConstant {
             cookie.setMaxAge(expiredSeconds);
 
             response.addCookie(cookie);
+            logger.info("发送cookie....");
             return "redirect:/index";
         }else{
             model.addAttribute("usernameMsg",map.get("usernameMsg"));
@@ -134,9 +136,9 @@ public class LoginController implements CommunityConstant {
         }
     }
 
-    @RequestMapping(path = "/logout",method = RequestMethod.PUT)
+    @RequestMapping(path = "/logout",method = RequestMethod.GET)
     public String logout(@CookieValue("ticket") String ticket){
         userService.logout(ticket);
-        return "redirect:/site/login";
+        return "redirect:/login";
     }
 }

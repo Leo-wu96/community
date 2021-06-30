@@ -139,11 +139,11 @@ public class UserService implements CommunityConstant {
         }
         //返回登录凭证,即添加login-ticket
         LoginTicket loginTicket = new LoginTicket();
-        loginTicket.setUser_id(user.getId());
+        loginTicket.setUserId(user.getId());
         loginTicket.setStatus(0);
         loginTicket.setTicket(CommunityUtil.generateUUID());
         loginTicket.setExpired(new Date(System.currentTimeMillis()+expiredSeconds*1000));
-        loginTicketMapper.insertTicket(loginTicket);
+        loginTicketMapper.insertLoginTicket(loginTicket);
         map.put("ticket",loginTicket.getTicket());
 
         return map;
@@ -155,5 +155,13 @@ public class UserService implements CommunityConstant {
 
     public LoginTicket findLoginTicket(String ticket){
         return loginTicketMapper.selectByTicket(ticket);
+    }
+
+    public int updateHeader(int userId, String headerUrl){
+        return userMapper.updateHeader(userId, headerUrl);
+    }
+
+    public int updatePassword(int userId, String password){
+        return userMapper.updatePassword(userId,password);
     }
 }
