@@ -14,11 +14,15 @@
     function send(){
       //  异步请求
       $.post(
+                //访问路径
               "/community/alpha/ajax",
+                //向服务器发送的数据
               {"name":"张三","age":25},
+                //data是服务器向浏览器返回的数据，匿名回调对象
               function (data){
                 console.log(typeof (data));
                 console.log(data);
+                //转换为json字符串
                 data = $.parseJSON(data);
                 console.log(typeof (data));
                 console.log(data.code);

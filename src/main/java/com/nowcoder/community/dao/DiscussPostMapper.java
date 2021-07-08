@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface DiscussPostMapper {
     List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit);
-
+    //param注解是列别名，如果只有一个参数，并且在if里使用，则必须加别名。
     int selectDiscussPostRows(@Param("userId") int userId);
 
     int insertDiscussPost(DiscussPost discussPost);
