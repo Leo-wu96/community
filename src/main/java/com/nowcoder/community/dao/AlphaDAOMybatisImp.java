@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Primary
-
 public class AlphaDAOMybatisImp implements AlphaDAO{
     @Override
     public String select() {

@@ -15,25 +15,31 @@ import java.util.Map;
 
 @Controller
 public class LikeController {
+
     @Autowired
     private LikeService likeService;
 
     @Autowired
     private HostHolder hostHolder;
 
-    @RequestMapping(path = "/like",method = RequestMethod.POST)
+    @RequestMapping(path = "/like", method = RequestMethod.POST)
     @ResponseBody
-    public String like(int entityType, int entityId){
+    public String like(int entityType, int entityId, int entityUserId) {
         User user = hostHolder.getUser();
-        likeService.like(user.getId(),entityType,entityId);
-        //数量
-        long entityLikeCount = likeService.findEntityLikeCount(entityType, entityId);
-        //用户是否点赞
-        int likeStatus = likeService.findEntityLikeStatus(user.getId(), entityType, entityId);
 
+        // 点赞
+        likeService.like(user.getId(), entityType, entityId, entityUserId);
+
+        // 数量
+        long likeCount = likeService.findEntityLikeCount(entityType, entityId);
+        // 状态
+        int likeStatus = likeService.findEntityLikeStatus(user.getId(), entityType, entityId);
+        // 返回的结果
         Map<String, Object> map = new HashMap<>();
-        map.put("likeCount",entityLikeCount);
-        map.put("likeStatus",likeStatus);
-        return CommunityUtil.getJsonString(0,null, map);
+        map.put("likeCount", likeCount);
+        map.put("likeStatus", likeStatus);
+
+        return CommunityUtil.getJsonString(0, null, map);
     }
+
 }

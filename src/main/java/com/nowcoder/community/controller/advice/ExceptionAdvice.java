@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-//这样可以只扫描带有Controller的注解
+//这样可以只扫描带有Controller的注解，Controller全局配置类，对所有controller进行监控
 @ControllerAdvice(annotations = Controller.class)
 public class ExceptionAdvice {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
