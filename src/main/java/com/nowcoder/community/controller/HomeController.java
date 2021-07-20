@@ -4,7 +4,9 @@ import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.Page;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.DiscussPostService;
+import com.nowcoder.community.service.LikeService;
 import com.nowcoder.community.service.UserService;
+import com.nowcoder.community.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,12 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
     @Autowired
     private DiscussPostService discussPostService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeService likeService;
 
     //方法调用之前，SpringMVC会自动实例化Model和Page，并将Page注入Model，所以在Thymeleaf中可以直接访问page里的方法。
     @RequestMapping(path = "/index",method = RequestMethod.GET)
@@ -38,6 +43,10 @@ public class HomeController {
             map.put("post",post);
             User user = userService.findUserById(post.getUserId());
             map.put("user",user);
+
+            long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST,post.getId());
+            map.put("likeCount",likeCount);
+
             list.add(map);
         }
         model.addAttribute("discussPosts",list);
